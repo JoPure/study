@@ -203,6 +203,7 @@ Promise.all([promise1, promise2]).then(function(value) {
 # await async
 
 -<code>await</code>
+
 await 返回 Promise 对象的处理结果。它只能在异步函数 async function 中使用。
 await 表达式会暂停当前 async function 的执行，等待 Promise 处理完成。
 若 Promise 正常处理(fulfilled)，其回调的 resolve 函数参数作为 await 表达式的值，继续执行 async function。
@@ -273,6 +274,7 @@ console.log(obj.prop)
 ```
 
 -<code>Object.assign()</code>
+
 Object.assign() 方法用于将所有可枚举属性的值从一个或多个源对象复制到目标对象。它将返回目标对象。
 
 ```javascript
