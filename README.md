@@ -200,7 +200,7 @@ Promise.all([promise1, promise2]).then(function(value) {
 })
 ```
 
-# await async
+# await async 傻傻分不清楚
 
 -<code>await</code>
 
@@ -211,6 +211,12 @@ await 表达式会暂停当前 async function 的执行，等待 Promise 处理�
 另外，如果 await 操作符后的表达式的值不是一个 Promise，则返回该值本身
 
 -<code>async</code>
+
+async 函数会返回一个 promise 对象
+
+async 的用法，它作为一个关键字放到函数前面，用于表示函数是一个异步函数，
+async 就是异步的意思，
+异步函数也就意味着该函数的执行不会阻塞后面代码的执行
 
 ```javascript
  async initData () {
