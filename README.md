@@ -102,7 +102,154 @@ const map = { boolean: { 0: '否', 1: '是', 2: '不知道' } }
 
 # promise
 
+promise 是一个对象，代表异步操作的成功或者失败
+promise 有三种状态，成功，失败，
+
+- resolve (true)
+- reject (false)
+- pending(等待)
+  
+  promise 里的 then 会跟随 resolve 成功的回调
+  catch 则是 reject 失败的回调
+
+```javascript
+function readyPormise() {
+  return new Promise(function(resolve, reject) {
+    var state = document.readyState
+    if (readyState === 'interactive' || readyState === 'complete') {
+      resolve()
+    } else {
+      window.addEventListener('DOMContentLoaded', resolve)
+    }
+  })
+}
+readyPormise().then(function() {
+  console.log('success')
+})
+readyPormise().catch(function() {
+  console.log('failure')
+})
+```
+
+## promise.then() 理解
+
+也可以利用 then(onFulfilled，onRejected)方法来执行的，第一个方法就是成功状态的标志，第二个方法是失败的状态标志
+
+```javascript
+// 方法调用
+readyPormise(true).then(
+  function(msg) {
+    console.log(msg)
+  },
+  function(error) {
+    console.log(error)
+  }
+)
+```
+
+当有多个的时候也可以 then 多个,当然每次调用一次 then 或者 catch 都会返回不一样的 promise 对象
+多个 then 连接在一起的时候函数会严格按照顺序执行，resolve-then-then-then,其中如果有一个失败或者错误可能会暂停在当前 then 的回调里
+
+```javascript
+readyPormise(true)
+  .then(
+    function(msg) {
+      console.log(msg)
+    },
+    function(error) {
+      console.log(error)
+    }
+  )
+  .then(function(msg) {
+    console.log(msg)
+  })
+  .then(function(msg) {
+    console.log('1')
+  })
+```
+
+## promise.catch() 理解
+
+Promise.catch()方法是 promise.then(undefined,onRejected)方法的一个别名，
+该方法用来注册当 promise 对象状态变为 Rejected 的回调函数。
+
+```javascript
+var promise = Promise.reject(new Error('message'))
+promise.catch(function(error) {
+  console.log(error)
+})
+```
+
+## promise.all() 理解
+
+Promise.all 可以接受一个元素为 Promise 对象的数组作为参数，当这个数组里面所有的 promise 对象都变为 resolve 时，该方法才会返回。
+
+```javascript
+var promise1 = new Promise(function(resolve) {
+  setTimeout(function() {
+    resolve(1)
+  }, 3000)
+})
+var promise2 = new Promise(function(resolve) {
+  setTimeout(function() {
+    resolve(2)
+  }, 1000)
+})
+Promise.all([promise1, promise2]).then(function(value) {
+  console.log(value) // 打印[1,2]
+})
+```
+
 # await async
+
+-<code>await</code>
+await 返回 Promise 对象的处理结果。它只能在异步函数 async function 中使用。
+await 表达式会暂停当前 async function 的执行，等待 Promise 处理完成。
+若 Promise 正常处理(fulfilled)，其回调的 resolve 函数参数作为 await 表达式的值，继续执行 async function。
+若 Promise 处理异常(rejected)，await 表达式会把 Promise 的异常原因抛出。
+另外，如果 await 操作符后的表达式的值不是一个 Promise，则返回该值本身
+
+-<code>async</code>
+
+```javascript
+ async initData () {
+      let res = await this.getIndName().catch(e => false)
+      if (!res) {
+        return
+      }
+ }
+ getIndName () {
+   // 请求方法封装
+    return apiCap.getCompanyCode(this.companyId).then((res) => {
+      if (!res || res.length <= 0) {
+        return Promise.reject(new Error(false))
+      }
+      return Promise.resolve(true)
+    }).catch(e => Promise.reject(e))
+ }
+ getIndName(){
+   // 请求函数不封装  注意此时return 的方法里要加个true
+    return this.httpRequest({
+      url: '/login',
+      method: 'POST',
+      data: {
+        userName: this.form.userName,
+        password: this.form.password
+      }
+    }, true).then(res => {
+      if (!res || res.length <= 0) {
+        return Promise.reject(new Error(false))
+      }
+      if (!res.data) {
+        return Promise.reject(new Error(err))
+      } else {
+        return Promise.resolve(res)
+      }
+    }).catch(e => {
+      that.$message.error(e.message || '网络错误')
+    })
+ }
+```
 
 # 一些个人觉得需要多学习的方法或属性
 
